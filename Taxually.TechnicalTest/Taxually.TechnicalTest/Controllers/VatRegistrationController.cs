@@ -17,7 +17,6 @@ namespace Taxually.TechnicalTest.Controllers
 
         public VatRegistrationController(IEnumerable<IVatRegistrationHandler> handlers)
         {
-            // Az országkódok alapján készítünk egy szótárat
             registrationHandlers = handlers.ToDictionary(handler => handler.countryCode, handler => handler);
         }
         [HttpPost]
@@ -26,7 +25,7 @@ namespace Taxually.TechnicalTest.Controllers
             if (registrationHandlers.TryGetValue(request.Country, out var requestHandler))
             {
                 await requestHandler.RegisterAsync(request);
-                return Ok(new { Message = "VAT registration request processed successfully", Country = request.Country });
+                return Ok($"VAT registration request processed successfully for country {request.Country}");
             }
 
             return BadRequest("Given country code currently not supported for registration");
